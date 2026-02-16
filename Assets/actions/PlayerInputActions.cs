@@ -72,7 +72,7 @@ using UnityEngine.InputSystem.Utilities;
 /// }
 /// </code>
 /// </example>
-public partial class @PlayerInput: IInputActionCollection2, IDisposable
+public partial class @PlayerInput : IInputActionCollection2, IDisposable
 {
     /// <summary>
     /// Provides access to the underlying asset instance.
@@ -82,7 +82,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     /// <summary>
     /// Constructs a new instance.
     /// </summary>
-    public @PlayerInput()
+    public @PlayerInput ()
     {
         asset = InputActionAsset.FromJson(@"{
     ""version"": 1,
@@ -100,6 +100,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Move1"",
+                    ""type"": ""Value"",
+                    ""id"": ""6227612e-eda3-47e4-9da8-4923c1a306d9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -113,6 +122,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""546a8aef-5a8b-4afd-94fc-e7fa4cec61bc"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,11 +142,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_move = m_Player.FindAction("move", throwIfNotFound: true);
+        m_Player_Move1 = m_Player.FindAction("Move1", throwIfNotFound: true);
     }
 
-    ~@PlayerInput()
+    ~@PlayerInput ()
     {
-        UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInput.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInput .Player.Disable() has not been called.");
     }
 
     /// <summary>
@@ -203,21 +224,26 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_move;
+    private readonly InputAction m_Player_Move1;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
     public struct PlayerActions
     {
-        private @PlayerInput m_Wrapper;
+        private @PlayerInput  m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public PlayerActions(@PlayerInput  wrapper) { m_Wrapper = wrapper; }
         /// <summary>
         /// Provides access to the underlying input action "Player/move".
         /// </summary>
         public InputAction @move => m_Wrapper.m_Player_move;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Move1".
+        /// </summary>
+        public InputAction @Move1 => m_Wrapper.m_Player_Move1;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -247,6 +273,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @move.started += instance.OnMove;
             @move.performed += instance.OnMove;
             @move.canceled += instance.OnMove;
+            @Move1.started += instance.OnMove1;
+            @Move1.performed += instance.OnMove1;
+            @Move1.canceled += instance.OnMove1;
         }
 
         /// <summary>
@@ -261,6 +290,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @move.started -= instance.OnMove;
             @move.performed -= instance.OnMove;
             @move.canceled -= instance.OnMove;
+            @Move1.started -= instance.OnMove1;
+            @Move1.performed -= instance.OnMove1;
+            @Move1.canceled -= instance.OnMove1;
         }
 
         /// <summary>
@@ -308,5 +340,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Move1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove1(InputAction.CallbackContext context);
     }
 }
